@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/row_task_tv_title"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp"
+            tools:text="Task Title"/>
+
+        <Button
+            android:id="@+id/row_task_btn_start_pause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Start"
+            style="?attr/borderlessButtonStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/row_task_btn_delete"
+            app:layout_constraintTop_toBottomOf="@id/row_task_tv_title"/>
+
+        <Button
+            android:id="@+id/row_task_btn_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Delete"
+            style="?attr/borderlessButtonStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/row_task_btn_start_pause"
+            app:layout_constraintTop_toBottomOf="@id/row_task_tv_title"/>
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

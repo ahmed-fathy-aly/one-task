@@ -58,30 +58,42 @@ public class TasksRepoTest {
 				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
 
 		// set current task
-		repo.setCurrentTask(1);
+		repo.changeStatus(1, unused -> TaskDataModel.Status.CURRENT);
+		repo.changeStatus(1, unused -> TaskDataModel.Status.CURRENT);
 		assertLastValue(observer, Arrays.asList(
 				new TaskDataModel(1, "a", TaskDataModel.Status.CURRENT),
 				new TaskDataModel(2, "b", TaskDataModel.Status.PAUSED),
 				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
 
-		repo.setCurrentTask(2);
+		repo.changeStatus(2, unused -> TaskDataModel.Status.CURRENT);
 		assertLastValue(observer, Arrays.asList(
 				new TaskDataModel(1, "a", TaskDataModel.Status.PAUSED),
 				new TaskDataModel(2, "b", TaskDataModel.Status.CURRENT),
 				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
 
-		// mark finished
-		repo.markDone(1);
+		repo.changeStatus(2, unused -> TaskDataModel.Status.PAUSED);
 		assertLastValue(observer, Arrays.asList(
-				new TaskDataModel(1, "a", TaskDataModel.Status.DONE),
+				new TaskDataModel(1, "a", TaskDataModel.Status.PAUSED),
+				new TaskDataModel(2, "b", TaskDataModel.Status.PAUSED),
+				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
+
+		repo.changeStatus(2, unused -> TaskDataModel.Status.CURRENT);
+		assertLastValue(observer, Arrays.asList(
+				new TaskDataModel(1, "a", TaskDataModel.Status.PAUSED),
 				new TaskDataModel(2, "b", TaskDataModel.Status.CURRENT),
 				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
 
-		repo.markDone(2);
+		repo.changeStatus(2, unused -> TaskDataModel.Status.DONE);
 		assertLastValue(observer, Arrays.asList(
-				new TaskDataModel(1, "a", TaskDataModel.Status.DONE),
+				new TaskDataModel(1, "a", TaskDataModel.Status.PAUSED),
 				new TaskDataModel(2, "b", TaskDataModel.Status.DONE),
 				new TaskDataModel(3, "c", TaskDataModel.Status.PAUSED)));
+
+		repo.changeStatus(3, unused -> TaskDataModel.Status.DONE);
+		assertLastValue(observer, Arrays.asList(
+				new TaskDataModel(1, "a", TaskDataModel.Status.PAUSED),
+				new TaskDataModel(2, "b", TaskDataModel.Status.DONE),
+				new TaskDataModel(3, "c", TaskDataModel.Status.DONE)));
 
 		// clear
 		repo.clear();

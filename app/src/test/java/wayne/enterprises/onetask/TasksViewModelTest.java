@@ -59,21 +59,7 @@ public class TasksViewModelTest {
 		// click the create task button, press back and create again
 		viewModel.onClickCreateNewTask();
 		showCreateTaskWindowObserver.assertValueAt(1, true);
-		viewModel.onBackPressed();
 		showCreateTaskWindowObserver.assertValueAt(2, false);
-		viewModel.onClickCreateNewTask();
-		showCreateTaskWindowObserver.assertValueAt(3, true);
-
-		// create a new tasks
-		viewModel.onCreateNewTask("f");
-
-		showCreateTaskWindowObserver.assertValueAt(4, false);
-		currentTasksObserver
-				.assertValueAt(1, Arrays.asList(
-						new TaskUiModel(1, "a", true),
-						new TaskUiModel(3, "c", true),
-						new TaskUiModel(4, "d", true),
-						new TaskUiModel(6, "f", true)));
 	}
 
 }

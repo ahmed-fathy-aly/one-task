@@ -8,10 +8,11 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.BehaviorSubject;
 
+import static wayne.enterprises.onetask.TaskDataModel.Status.CURRENT;
 import static wayne.enterprises.onetask.TaskDataModel.Status.DONE;
 import static wayne.enterprises.onetask.TaskDataModel.Status.PAUSED;
 
-public class TasksViewModel {
+public class TasksViewModel extends ViewModel {
 
 	@NonNull
 	private final TasksRepo tasksRepo;
@@ -46,12 +47,8 @@ public class TasksViewModel {
 	public void onClickCreateNewTask() {
 		if (Boolean.FALSE.equals(showCreateTaskWindow.getValue())) {
 			showCreateTaskWindow.onNext(true);
+			showCreateTaskWindow.onNext(false);
 		}
-	}
-
-	public void onCreateNewTask(@NonNull String title) {
-		tasksRepo.createTask(title);
-		showCreateTaskWindow.onNext(false);
 	}
 
 	@NonNull
@@ -76,10 +73,22 @@ public class TasksViewModel {
 	}
 
 	public void onToggleTask(@NonNull TaskUiModel task) {
-		tasksRepo.setCurrentTask(task.getId());
+		onAnotherThread(() -> tasksRepo.changeStatus(task.getId(), (oldStatus) -> {
+			switch (oldStatus) {
+				case DONE:
+					return DONE;
+				case PAUSED:
+					return CURRENT;
+				case CURRENT:
+					return PAUSED;
+				default:
+					return null;
+			}
+		}), null);
 	}
 
 	public void onPressDone(@NonNull TaskUiModel task) {
-		tasksRepo.markDone(task.getId());
+		onAnotherThread(() -> tasksRepo.changeStatus(task.getId(), unused -> DONE), null);
+
 	}
 }

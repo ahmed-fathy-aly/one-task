@@ -34,24 +34,24 @@ public class TasksRepo {
 		databaseDao.clear();
 	}
 
-	public void setCurrentTask(int id) {
+	/**
+	 * mantains that there's only 1 task running
+	 */
+	public void changeStatus(int taskId, @NonNull Function<TaskDataModel.Status, TaskDataModel.Status> newStatusFunction) {
 		databaseDao
 				.getAllSingle()
 				.subscribe(tasks -> {
 					List<TaskDataModel> changed = new ArrayList<>();
 					for (TaskDataModel task : tasks) {
-						if (task.getId() == id && task.getStatus() != CURRENT) {
-							changed.add(task.setStatus(CURRENT));
+						if (task.getId() == taskId) {
+							changed.add(task.setStatus(newStatusFunction.apply(task.getStatus())));
 						} else if (task.getStatus() == CURRENT) {
 							changed.add(task.setStatus(PAUSED));
+						} else {
+							changed.add(task);
 						}
 					}
 					databaseDao.insertAll(changed);
 				});
-
-	}
-
-	public void markDone(int id) {
-		databaseDao.update(id, DONE);
 	}
 }
